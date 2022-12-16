@@ -1,0 +1,68 @@
+syntax = "proto3";
+package belshare.eav;
+
+// this line is used by starport scaffolding # proto/tx/import
+import "belshare/eav/attribute.proto";
+// import "belshare/eav/attribute.proto";
+option go_package = "belShare/x/eav/types";
+
+// Msg defines the Msg service.
+service Msg {
+      rpc CreateUser(MsgCreateUser) returns (MsgCreateUserResponse);
+  rpc CreateEntityType(MsgCreateEntityType) returns (MsgCreateEntityTypeResponse);
+  rpc CraeteAtteibute(MsgCraeteAtteibute) returns (MsgCraeteAtteibuteResponse);
+  rpc CraeteValue(MsgCraeteValue) returns (MsgCraeteValueResponse);
+  rpc CreateShop(MsgCreateShop) returns (MsgCreateShopResponse);
+// this line is used by starport scaffolding # proto/tx/rpc
+}
+
+message MsgCreateUser {
+  string creator = 1;
+  string address = 2;
+}
+
+message MsgCreateUserResponse {
+}
+
+
+message MsgCreateEntityType {
+  string creator = 1;
+  string name = 2;
+}
+
+message MsgCreateEntityTypeResponse {
+  string id = 1;
+}
+
+message MsgCraeteAtteibute {
+  string creator = 1;
+  string name = 2;
+  string entityId = 3;
+}
+
+message MsgCraeteAtteibuteResponse {
+  string id = 1;
+}
+
+message MsgCraeteValue {
+  string creator = 1;
+  string attributeId = 2;
+  string entityId = 3;
+  string value = 4;
+}
+
+message MsgCraeteValueResponse {
+  string id = 1;
+}
+
+
+message MsgCreateShop {
+  string creator = 1;
+  string address = 2;
+  repeated Attribute attributs = 3;
+}
+
+message MsgCreateShopResponse {
+}
+
+// this line is used by starport scaffolding # proto/tx/message

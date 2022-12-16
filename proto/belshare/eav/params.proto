@@ -1,0 +1,12 @@
+syntax = "proto3";
+package belshare.eav;
+
+import "gogoproto/gogo.proto";
+
+option go_package = "belShare/x/eav/types";
+
+// Params defines the parameters for the module.
+message Params {
+  option (gogoproto.goproto_stringer) = false;
+  
+}

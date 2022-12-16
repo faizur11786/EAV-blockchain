@@ -1,0 +1,12 @@
+syntax = "proto3";
+package belshare.eav;
+
+option go_package = "belShare/x/eav/types";
+
+message Merchant {
+  string guid = 1; 
+  string creator = 2; 
+  string address = 3; 
+  
+}
+

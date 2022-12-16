@@ -1,0 +1,12 @@
+syntax = "proto3";
+package belshare.belshare;
+
+import "gogoproto/gogo.proto";
+
+option go_package = "belShare/x/belshare/types";
+
+// Params defines the parameters for the module.
+message Params {
+  option (gogoproto.goproto_stringer) = false;
+  
+}

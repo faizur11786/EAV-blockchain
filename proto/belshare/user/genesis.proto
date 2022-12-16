@@ -1,0 +1,18 @@
+syntax = "proto3";
+package belshare.user;
+
+import "gogoproto/gogo.proto";
+import "belshare/user/params.proto";
+import "belshare/user/user.proto";
+import "belshare/user/xxx.proto";
+// this line is used by starport scaffolding # genesis/proto/import
+
+option go_package = "belShare/x/user/types";
+
+// GenesisState defines the user module's genesis state.
+message GenesisState {
+  Params params = 1 [(gogoproto.nullable) = false];
+  repeated User userList = 2 [(gogoproto.nullable) = false];
+  repeated Xxx xxxList = 3 [(gogoproto.nullable) = false];
+  // this line is used by starport scaffolding # genesis/proto/state
+}

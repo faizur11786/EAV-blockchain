@@ -1,0 +1,11 @@
+syntax = "proto3";
+package belshare.user;
+
+option go_package = "belShare/x/user/types";
+
+message Xxx {
+  string address = 1; 
+  string creator = 2; 
+  
+}
+

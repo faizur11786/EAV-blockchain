@@ -1,0 +1,13 @@
+syntax = "proto3";
+package belshare.eav;
+
+option go_package = "belShare/x/eav/types";
+
+message Value {
+  string entityId = 1; 
+  string attributeId = 2; 
+  string guid = 3; 
+  string value = 4; 
+  
+}
+

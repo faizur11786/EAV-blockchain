@@ -1,0 +1,24 @@
+syntax = "proto3";
+package belshare.eav;
+
+import "gogoproto/gogo.proto";
+import "belshare/eav/params.proto";
+import "belshare/eav/user.proto";
+import "belshare/eav/merchant.proto";
+import "belshare/eav/entity_type.proto";
+import "belshare/eav/attribute.proto";
+import "belshare/eav/value.proto";
+// this line is used by starport scaffolding # genesis/proto/import
+
+option go_package = "belShare/x/eav/types";
+
+// GenesisState defines the eav module's genesis state.
+message GenesisState {
+  Params params = 1 [(gogoproto.nullable) = false];
+  repeated User userList = 2 [(gogoproto.nullable) = false];
+  repeated Merchant merchantList = 3 [(gogoproto.nullable) = false];
+  repeated EntityType entityTypeList = 4 [(gogoproto.nullable) = false];
+  repeated Attribute attributeList = 5 [(gogoproto.nullable) = false];
+  repeated Value valueList = 6 [(gogoproto.nullable) = false];
+  // this line is used by starport scaffolding # genesis/proto/state
+}

@@ -1,0 +1,176 @@
+syntax = "proto3";
+package belshare.eav;
+
+import "gogoproto/gogo.proto";
+import "google/api/annotations.proto";
+import "cosmos/base/query/v1beta1/pagination.proto";
+import "belshare/eav/params.proto";
+import "belshare/eav/user.proto";
+import "belshare/eav/merchant.proto";
+import "belshare/eav/entity_type.proto";
+import "belshare/eav/attribute.proto";
+import "belshare/eav/value.proto";
+// this line is used by starport scaffolding # 1
+
+option go_package = "belShare/x/eav/types";
+
+// Query defines the gRPC querier service.
+service Query {
+  // Parameters queries the parameters of the module.
+  rpc Params(QueryParamsRequest) returns (QueryParamsResponse) {
+    option (google.api.http).get = "/belShare/eav/params";
+  }
+  // Queries a User by index.
+	rpc User(QueryGetUserRequest) returns (QueryGetUserResponse) {
+		option (google.api.http).get = "/belShare/eav/user/{index}";
+	}
+
+	// Queries a list of User items.
+	rpc UserAll(QueryAllUserRequest) returns (QueryAllUserResponse) {
+		option (google.api.http).get = "/belShare/eav/user";
+	}
+
+// Queries a Merchant by index.
+	rpc Merchant(QueryGetMerchantRequest) returns (QueryGetMerchantResponse) {
+		option (google.api.http).get = "/belShare/eav/merchant/{guid}/{creator}";
+	}
+
+	// Queries a list of Merchant items.
+	rpc MerchantAll(QueryAllMerchantRequest) returns (QueryAllMerchantResponse) {
+		option (google.api.http).get = "/belShare/eav/merchant";
+	}
+
+// Queries a EntityType by index.
+	rpc EntityType(QueryGetEntityTypeRequest) returns (QueryGetEntityTypeResponse) {
+		option (google.api.http).get = "/belShare/eav/entity_type/{guid}";
+	}
+
+	// Queries a list of EntityType items.
+	rpc EntityTypeAll(QueryAllEntityTypeRequest) returns (QueryAllEntityTypeResponse) {
+		option (google.api.http).get = "/belShare/eav/entity_type";
+	}
+
+// Queries a Attribute by index.
+	rpc Attribute(QueryGetAttributeRequest) returns (QueryGetAttributeResponse) {
+		option (google.api.http).get = "/belShare/eav/attribute/{guid}";
+	}
+
+	// Queries a list of Attribute items.
+	rpc AttributeAll(QueryAllAttributeRequest) returns (QueryAllAttributeResponse) {
+		option (google.api.http).get = "/belShare/eav/attribute";
+	}
+
+// Queries a Value by index.
+	rpc Value(QueryGetValueRequest) returns (QueryGetValueResponse) {
+		option (google.api.http).get = "/belShare/eav/value/{entityId}/{attributeId}";
+	}
+
+	// Queries a list of Value items.
+	rpc ValueAll(QueryAllValueRequest) returns (QueryAllValueResponse) {
+		option (google.api.http).get = "/belShare/eav/value";
+	}
+
+// this line is used by starport scaffolding # 2
+}
+
+// QueryParamsRequest is request type for the Query/Params RPC method.
+message QueryParamsRequest {}
+
+// QueryParamsResponse is response type for the Query/Params RPC method.
+message QueryParamsResponse {
+  // params holds all the parameters of this module.
+  Params params = 1 [(gogoproto.nullable) = false];
+}
+
+message QueryGetUserRequest {
+	  string index = 1;
+
+}
+
+message QueryGetUserResponse {
+	User user = 1 [(gogoproto.nullable) = false];
+}
+
+message QueryAllUserRequest {
+	cosmos.base.query.v1beta1.PageRequest pagination = 1;
+}
+
+message QueryAllUserResponse {
+	repeated User user = 1 [(gogoproto.nullable) = false];
+	cosmos.base.query.v1beta1.PageResponse pagination = 2;
+}
+
+message QueryGetMerchantRequest {
+	  string guid = 1;
+  string creator = 2;
+
+}
+
+message QueryGetMerchantResponse {
+	Merchant merchant = 1 [(gogoproto.nullable) = false];
+}
+
+message QueryAllMerchantRequest {
+	cosmos.base.query.v1beta1.PageRequest pagination = 1;
+}
+
+message QueryAllMerchantResponse {
+	repeated Merchant merchant = 1 [(gogoproto.nullable) = false];
+	cosmos.base.query.v1beta1.PageResponse pagination = 2;
+}
+
+message QueryGetEntityTypeRequest {
+	  string guid = 1;
+}
+
+message QueryGetEntityTypeResponse {
+	EntityType entityType = 1 [(gogoproto.nullable) = false];
+}
+
+message QueryAllEntityTypeRequest {
+	cosmos.base.query.v1beta1.PageRequest pagination = 1;
+}
+
+message QueryAllEntityTypeResponse {
+	repeated EntityType entityType = 1 [(gogoproto.nullable) = false];
+	cosmos.base.query.v1beta1.PageResponse pagination = 2;
+}
+
+message QueryGetAttributeRequest {
+	  string guid = 1;
+
+}
+
+message QueryGetAttributeResponse {
+	Attribute attribute = 1 [(gogoproto.nullable) = false];
+}
+
+message QueryAllAttributeRequest {
+	cosmos.base.query.v1beta1.PageRequest pagination = 1;
+}
+
+message QueryAllAttributeResponse {
+	repeated Attribute attribute = 1 [(gogoproto.nullable) = false];
+	cosmos.base.query.v1beta1.PageResponse pagination = 2;
+}
+
+message QueryGetValueRequest {
+  string entityId = 1;
+  string attributeId = 2;
+
+}
+
+message QueryGetValueResponse {
+	Value value = 1 [(gogoproto.nullable) = false];
+}
+
+message QueryAllValueRequest {
+	cosmos.base.query.v1beta1.PageRequest pagination = 1;
+}
+
+message QueryAllValueResponse {
+	repeated Value value = 1 [(gogoproto.nullable) = false];
+	cosmos.base.query.v1beta1.PageResponse pagination = 2;
+}
+
+// this line is used by starport scaffolding # 3
