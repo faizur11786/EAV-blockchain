@@ -51,6 +51,16 @@ export interface MsgCreateShop {
 export interface MsgCreateShopResponse {
 }
 
+export interface MsgNewMerchant {
+  creator: string;
+  address: string;
+  attributes: Attribute[];
+}
+
+export interface MsgNewMerchantResponse {
+  guid: string;
+}
+
 function createBaseMsgCreateUser(): MsgCreateUser {
   return { creator: "", address: "" };
 }
@@ -600,14 +610,133 @@ export const MsgCreateShopResponse = {
   },
 };
 
+function createBaseMsgNewMerchant(): MsgNewMerchant {
+  return { creator: "", address: "", attributes: [] };
+}
+
+export const MsgNewMerchant = {
+  encode(message: MsgNewMerchant, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.creator !== "") {
+      writer.uint32(10).string(message.creator);
+    }
+    if (message.address !== "") {
+      writer.uint32(18).string(message.address);
+    }
+    for (const v of message.attributes) {
+      Attribute.encode(v!, writer.uint32(26).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): MsgNewMerchant {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseMsgNewMerchant();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.creator = reader.string();
+          break;
+        case 2:
+          message.address = reader.string();
+          break;
+        case 3:
+          message.attributes.push(Attribute.decode(reader, reader.uint32()));
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): MsgNewMerchant {
+    return {
+      creator: isSet(object.creator) ? String(object.creator) : "",
+      address: isSet(object.address) ? String(object.address) : "",
+      attributes: Array.isArray(object?.attributes) ? object.attributes.map((e: any) => Attribute.fromJSON(e)) : [],
+    };
+  },
+
+  toJSON(message: MsgNewMerchant): unknown {
+    const obj: any = {};
+    message.creator !== undefined && (obj.creator = message.creator);
+    message.address !== undefined && (obj.address = message.address);
+    if (message.attributes) {
+      obj.attributes = message.attributes.map((e) => e ? Attribute.toJSON(e) : undefined);
+    } else {
+      obj.attributes = [];
+    }
+    return obj;
+  },
+
+  fromPartial<I extends Exact<DeepPartial<MsgNewMerchant>, I>>(object: I): MsgNewMerchant {
+    const message = createBaseMsgNewMerchant();
+    message.creator = object.creator ?? "";
+    message.address = object.address ?? "";
+    message.attributes = object.attributes?.map((e) => Attribute.fromPartial(e)) || [];
+    return message;
+  },
+};
+
+function createBaseMsgNewMerchantResponse(): MsgNewMerchantResponse {
+  return { guid: "" };
+}
+
+export const MsgNewMerchantResponse = {
+  encode(message: MsgNewMerchantResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.guid !== "") {
+      writer.uint32(10).string(message.guid);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): MsgNewMerchantResponse {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseMsgNewMerchantResponse();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.guid = reader.string();
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): MsgNewMerchantResponse {
+    return { guid: isSet(object.guid) ? String(object.guid) : "" };
+  },
+
+  toJSON(message: MsgNewMerchantResponse): unknown {
+    const obj: any = {};
+    message.guid !== undefined && (obj.guid = message.guid);
+    return obj;
+  },
+
+  fromPartial<I extends Exact<DeepPartial<MsgNewMerchantResponse>, I>>(object: I): MsgNewMerchantResponse {
+    const message = createBaseMsgNewMerchantResponse();
+    message.guid = object.guid ?? "";
+    return message;
+  },
+};
+
 /** Msg defines the Msg service. */
 export interface Msg {
   CreateUser(request: MsgCreateUser): Promise<MsgCreateUserResponse>;
   CreateEntityType(request: MsgCreateEntityType): Promise<MsgCreateEntityTypeResponse>;
   CraeteAtteibute(request: MsgCraeteAtteibute): Promise<MsgCraeteAtteibuteResponse>;
   CraeteValue(request: MsgCraeteValue): Promise<MsgCraeteValueResponse>;
-  /** this line is used by starport scaffolding # proto/tx/rpc */
   CreateShop(request: MsgCreateShop): Promise<MsgCreateShopResponse>;
+  /** this line is used by starport scaffolding # proto/tx/rpc */
+  NewMerchant(request: MsgNewMerchant): Promise<MsgNewMerchantResponse>;
 }
 
 export class MsgClientImpl implements Msg {
@@ -619,6 +748,7 @@ export class MsgClientImpl implements Msg {
     this.CraeteAtteibute = this.CraeteAtteibute.bind(this);
     this.CraeteValue = this.CraeteValue.bind(this);
     this.CreateShop = this.CreateShop.bind(this);
+    this.NewMerchant = this.NewMerchant.bind(this);
   }
   CreateUser(request: MsgCreateUser): Promise<MsgCreateUserResponse> {
     const data = MsgCreateUser.encode(request).finish();
@@ -648,6 +778,12 @@ export class MsgClientImpl implements Msg {
     const data = MsgCreateShop.encode(request).finish();
     const promise = this.rpc.request("belshare.eav.Msg", "CreateShop", data);
     return promise.then((data) => MsgCreateShopResponse.decode(new _m0.Reader(data)));
+  }
+
+  NewMerchant(request: MsgNewMerchant): Promise<MsgNewMerchantResponse> {
+    const data = MsgNewMerchant.encode(request).finish();
+    const promise = this.rpc.request("belshare.eav.Msg", "NewMerchant", data);
+    return promise.then((data) => MsgNewMerchantResponse.decode(new _m0.Reader(data)));
   }
 }
 

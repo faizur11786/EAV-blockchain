@@ -46213,6 +46213,11 @@ definitions:
     type: object
   belshare.eav.MsgCreateUserResponse:
     type: object
+  belshare.eav.MsgNewMerchantResponse:
+    type: object
+    properties:
+      guid:
+        type: string
   belshare.eav.Params:
     type: object
     description: Params defines the parameters for the module.

@@ -49,6 +49,10 @@ export type EavMsgCreateShopResponse = object;
 
 export type EavMsgCreateUserResponse = object;
 
+export interface EavMsgNewMerchantResponse {
+  guid?: string;
+}
+
 /**
  * Params defines the parameters for the module.
  */

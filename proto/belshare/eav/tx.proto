@@ -13,6 +13,7 @@ service Msg {
   rpc CraeteAtteibute(MsgCraeteAtteibute) returns (MsgCraeteAtteibuteResponse);
   rpc CraeteValue(MsgCraeteValue) returns (MsgCraeteValueResponse);
   rpc CreateShop(MsgCreateShop) returns (MsgCreateShopResponse);
+  rpc NewMerchant(MsgNewMerchant) returns (MsgNewMerchantResponse);
 // this line is used by starport scaffolding # proto/tx/rpc
 }
 
@@ -63,6 +64,16 @@ message MsgCreateShop {
 }
 
 message MsgCreateShopResponse {
+}
+
+message MsgNewMerchant {
+  string creator = 1;
+  string address = 2;
+  repeated Attribute attributes = 3;
+}
+
+message MsgNewMerchantResponse {
+  string guid = 1;
 }
 
 // this line is used by starport scaffolding # proto/tx/message
