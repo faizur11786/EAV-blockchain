@@ -7,35 +7,23 @@ import { msgTypes } from './registry';
 import { IgniteClient } from "../client"
 import { MissingWalletError } from "../helpers"
 import { Api } from "./rest";
-import { MsgCreateShop } from "./types/belshare/eav/tx";
-import { MsgCreateEntityType } from "./types/belshare/eav/tx";
-import { MsgCraeteValue } from "./types/belshare/eav/tx";
 import { MsgCraeteAtteibute } from "./types/belshare/eav/tx";
+import { MsgCreateShop } from "./types/belshare/eav/tx";
 import { MsgCreateUser } from "./types/belshare/eav/tx";
+import { MsgCraeteValue } from "./types/belshare/eav/tx";
+import { MsgCreateEntityType } from "./types/belshare/eav/tx";
 
 
-export { MsgCreateShop, MsgCreateEntityType, MsgCraeteValue, MsgCraeteAtteibute, MsgCreateUser };
-
-type sendMsgCreateShopParams = {
-  value: MsgCreateShop,
-  fee?: StdFee,
-  memo?: string
-};
-
-type sendMsgCreateEntityTypeParams = {
-  value: MsgCreateEntityType,
-  fee?: StdFee,
-  memo?: string
-};
-
-type sendMsgCraeteValueParams = {
-  value: MsgCraeteValue,
-  fee?: StdFee,
-  memo?: string
-};
+export { MsgCraeteAtteibute, MsgCreateShop, MsgCreateUser, MsgCraeteValue, MsgCreateEntityType };
 
 type sendMsgCraeteAtteibuteParams = {
   value: MsgCraeteAtteibute,
+  fee?: StdFee,
+  memo?: string
+};
+
+type sendMsgCreateShopParams = {
+  value: MsgCreateShop,
   fee?: StdFee,
   memo?: string
 };
@@ -46,25 +34,37 @@ type sendMsgCreateUserParams = {
   memo?: string
 };
 
+type sendMsgCraeteValueParams = {
+  value: MsgCraeteValue,
+  fee?: StdFee,
+  memo?: string
+};
+
+type sendMsgCreateEntityTypeParams = {
+  value: MsgCreateEntityType,
+  fee?: StdFee,
+  memo?: string
+};
+
+
+type msgCraeteAtteibuteParams = {
+  value: MsgCraeteAtteibute,
+};
 
 type msgCreateShopParams = {
   value: MsgCreateShop,
 };
 
-type msgCreateEntityTypeParams = {
-  value: MsgCreateEntityType,
+type msgCreateUserParams = {
+  value: MsgCreateUser,
 };
 
 type msgCraeteValueParams = {
   value: MsgCraeteValue,
 };
 
-type msgCraeteAtteibuteParams = {
-  value: MsgCraeteAtteibute,
-};
-
-type msgCreateUserParams = {
-  value: MsgCreateUser,
+type msgCreateEntityTypeParams = {
+  value: MsgCreateEntityType,
 };
 
 
@@ -85,48 +85,6 @@ export const txClient = ({ signer, prefix, addr }: TxClientOptions = { addr: "ht
 
   return {
 		
-		async sendMsgCreateShop({ value, fee, memo }: sendMsgCreateShopParams): Promise<DeliverTxResponse> {
-			if (!signer) {
-					throw new Error('TxClient:sendMsgCreateShop: Unable to sign Tx. Signer is not present.')
-			}
-			try {			
-				const { address } = (await signer.getAccounts())[0]; 
-				const signingClient = await SigningStargateClient.connectWithSigner(addr,signer,{registry, prefix});
-				let msg = this.msgCreateShop({ value: MsgCreateShop.fromPartial(value) })
-				return await signingClient.signAndBroadcast(address, [msg], fee ? fee : defaultFee, memo)
-			} catch (e: any) {
-				throw new Error('TxClient:sendMsgCreateShop: Could not broadcast Tx: '+ e.message)
-			}
-		},
-		
-		async sendMsgCreateEntityType({ value, fee, memo }: sendMsgCreateEntityTypeParams): Promise<DeliverTxResponse> {
-			if (!signer) {
-					throw new Error('TxClient:sendMsgCreateEntityType: Unable to sign Tx. Signer is not present.')
-			}
-			try {			
-				const { address } = (await signer.getAccounts())[0]; 
-				const signingClient = await SigningStargateClient.connectWithSigner(addr,signer,{registry, prefix});
-				let msg = this.msgCreateEntityType({ value: MsgCreateEntityType.fromPartial(value) })
-				return await signingClient.signAndBroadcast(address, [msg], fee ? fee : defaultFee, memo)
-			} catch (e: any) {
-				throw new Error('TxClient:sendMsgCreateEntityType: Could not broadcast Tx: '+ e.message)
-			}
-		},
-		
-		async sendMsgCraeteValue({ value, fee, memo }: sendMsgCraeteValueParams): Promise<DeliverTxResponse> {
-			if (!signer) {
-					throw new Error('TxClient:sendMsgCraeteValue: Unable to sign Tx. Signer is not present.')
-			}
-			try {			
-				const { address } = (await signer.getAccounts())[0]; 
-				const signingClient = await SigningStargateClient.connectWithSigner(addr,signer,{registry, prefix});
-				let msg = this.msgCraeteValue({ value: MsgCraeteValue.fromPartial(value) })
-				return await signingClient.signAndBroadcast(address, [msg], fee ? fee : defaultFee, memo)
-			} catch (e: any) {
-				throw new Error('TxClient:sendMsgCraeteValue: Could not broadcast Tx: '+ e.message)
-			}
-		},
-		
 		async sendMsgCraeteAtteibute({ value, fee, memo }: sendMsgCraeteAtteibuteParams): Promise<DeliverTxResponse> {
 			if (!signer) {
 					throw new Error('TxClient:sendMsgCraeteAtteibute: Unable to sign Tx. Signer is not present.')
@@ -138,6 +96,20 @@ export const txClient = ({ signer, prefix, addr }: TxClientOptions = { addr: "ht
 				return await signingClient.signAndBroadcast(address, [msg], fee ? fee : defaultFee, memo)
 			} catch (e: any) {
 				throw new Error('TxClient:sendMsgCraeteAtteibute: Could not broadcast Tx: '+ e.message)
+			}
+		},
+		
+		async sendMsgCreateShop({ value, fee, memo }: sendMsgCreateShopParams): Promise<DeliverTxResponse> {
+			if (!signer) {
+					throw new Error('TxClient:sendMsgCreateShop: Unable to sign Tx. Signer is not present.')
+			}
+			try {			
+				const { address } = (await signer.getAccounts())[0]; 
+				const signingClient = await SigningStargateClient.connectWithSigner(addr,signer,{registry, prefix});
+				let msg = this.msgCreateShop({ value: MsgCreateShop.fromPartial(value) })
+				return await signingClient.signAndBroadcast(address, [msg], fee ? fee : defaultFee, memo)
+			} catch (e: any) {
+				throw new Error('TxClient:sendMsgCreateShop: Could not broadcast Tx: '+ e.message)
 			}
 		},
 		
@@ -155,6 +127,42 @@ export const txClient = ({ signer, prefix, addr }: TxClientOptions = { addr: "ht
 			}
 		},
 		
+		async sendMsgCraeteValue({ value, fee, memo }: sendMsgCraeteValueParams): Promise<DeliverTxResponse> {
+			if (!signer) {
+					throw new Error('TxClient:sendMsgCraeteValue: Unable to sign Tx. Signer is not present.')
+			}
+			try {			
+				const { address } = (await signer.getAccounts())[0]; 
+				const signingClient = await SigningStargateClient.connectWithSigner(addr,signer,{registry, prefix});
+				let msg = this.msgCraeteValue({ value: MsgCraeteValue.fromPartial(value) })
+				return await signingClient.signAndBroadcast(address, [msg], fee ? fee : defaultFee, memo)
+			} catch (e: any) {
+				throw new Error('TxClient:sendMsgCraeteValue: Could not broadcast Tx: '+ e.message)
+			}
+		},
+		
+		async sendMsgCreateEntityType({ value, fee, memo }: sendMsgCreateEntityTypeParams): Promise<DeliverTxResponse> {
+			if (!signer) {
+					throw new Error('TxClient:sendMsgCreateEntityType: Unable to sign Tx. Signer is not present.')
+			}
+			try {			
+				const { address } = (await signer.getAccounts())[0]; 
+				const signingClient = await SigningStargateClient.connectWithSigner(addr,signer,{registry, prefix});
+				let msg = this.msgCreateEntityType({ value: MsgCreateEntityType.fromPartial(value) })
+				return await signingClient.signAndBroadcast(address, [msg], fee ? fee : defaultFee, memo)
+			} catch (e: any) {
+				throw new Error('TxClient:sendMsgCreateEntityType: Could not broadcast Tx: '+ e.message)
+			}
+		},
+		
+		
+		msgCraeteAtteibute({ value }: msgCraeteAtteibuteParams): EncodeObject {
+			try {
+				return { typeUrl: "/belshare.eav.MsgCraeteAtteibute", value: MsgCraeteAtteibute.fromPartial( value ) }  
+			} catch (e: any) {
+				throw new Error('TxClient:MsgCraeteAtteibute: Could not create message: ' + e.message)
+			}
+		},
 		
 		msgCreateShop({ value }: msgCreateShopParams): EncodeObject {
 			try {
@@ -164,11 +172,11 @@ export const txClient = ({ signer, prefix, addr }: TxClientOptions = { addr: "ht
 			}
 		},
 		
-		msgCreateEntityType({ value }: msgCreateEntityTypeParams): EncodeObject {
+		msgCreateUser({ value }: msgCreateUserParams): EncodeObject {
 			try {
-				return { typeUrl: "/belshare.eav.MsgCreateEntityType", value: MsgCreateEntityType.fromPartial( value ) }  
+				return { typeUrl: "/belshare.eav.MsgCreateUser", value: MsgCreateUser.fromPartial( value ) }  
 			} catch (e: any) {
-				throw new Error('TxClient:MsgCreateEntityType: Could not create message: ' + e.message)
+				throw new Error('TxClient:MsgCreateUser: Could not create message: ' + e.message)
 			}
 		},
 		
@@ -180,19 +188,11 @@ export const txClient = ({ signer, prefix, addr }: TxClientOptions = { addr: "ht
 			}
 		},
 		
-		msgCraeteAtteibute({ value }: msgCraeteAtteibuteParams): EncodeObject {
+		msgCreateEntityType({ value }: msgCreateEntityTypeParams): EncodeObject {
 			try {
-				return { typeUrl: "/belshare.eav.MsgCraeteAtteibute", value: MsgCraeteAtteibute.fromPartial( value ) }  
+				return { typeUrl: "/belshare.eav.MsgCreateEntityType", value: MsgCreateEntityType.fromPartial( value ) }  
 			} catch (e: any) {
-				throw new Error('TxClient:MsgCraeteAtteibute: Could not create message: ' + e.message)
-			}
-		},
-		
-		msgCreateUser({ value }: msgCreateUserParams): EncodeObject {
-			try {
-				return { typeUrl: "/belshare.eav.MsgCreateUser", value: MsgCreateUser.fromPartial( value ) }  
-			} catch (e: any) {
-				throw new Error('TxClient:MsgCreateUser: Could not create message: ' + e.message)
+				throw new Error('TxClient:MsgCreateEntityType: Could not create message: ' + e.message)
 			}
 		},
 		
