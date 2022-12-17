@@ -59,6 +59,14 @@ func TestGenesis(t *testing.T) {
 				AttributeId: "1",
 			},
 		},
+		MerchantNewList: []types.MerchantNew{
+			{
+				Address: "0",
+			},
+			{
+				Address: "1",
+			},
+		},
 		// this line is used by starport scaffolding # genesis/test/state
 	}
 
@@ -75,5 +83,6 @@ func TestGenesis(t *testing.T) {
 	require.ElementsMatch(t, genesisState.EntityTypeList, got.EntityTypeList)
 	require.ElementsMatch(t, genesisState.AttributeList, got.AttributeList)
 	require.ElementsMatch(t, genesisState.ValueList, got.ValueList)
+	require.ElementsMatch(t, genesisState.MerchantNewList, got.MerchantNewList)
 	// this line is used by starport scaffolding # genesis/test/assert
 }

@@ -10,6 +10,7 @@ import "belshare/eav/merchant.proto";
 import "belshare/eav/entity_type.proto";
 import "belshare/eav/attribute.proto";
 import "belshare/eav/value.proto";
+import "belshare/eav/merchant_new.proto";
 // this line is used by starport scaffolding # 1
 
 option go_package = "belShare/x/eav/types";
@@ -68,6 +69,16 @@ service Query {
 	// Queries a list of Value items.
 	rpc ValueAll(QueryAllValueRequest) returns (QueryAllValueResponse) {
 		option (google.api.http).get = "/belShare/eav/value";
+	}
+
+// Queries a MerchantNew by index.
+	rpc MerchantNew(QueryGetMerchantNewRequest) returns (QueryGetMerchantNewResponse) {
+		option (google.api.http).get = "/belShare/eav/merchant_new/{address}";
+	}
+
+	// Queries a list of MerchantNew items.
+	rpc MerchantNewAll(QueryAllMerchantNewRequest) returns (QueryAllMerchantNewResponse) {
+		option (google.api.http).get = "/belShare/eav/merchant_new";
 	}
 
 // this line is used by starport scaffolding # 2
@@ -170,6 +181,24 @@ message QueryAllValueRequest {
 
 message QueryAllValueResponse {
 	repeated Value value = 1 [(gogoproto.nullable) = false];
+	cosmos.base.query.v1beta1.PageResponse pagination = 2;
+}
+
+message QueryGetMerchantNewRequest {
+	  string address = 1;
+
+}
+
+message QueryGetMerchantNewResponse {
+	MerchantNew merchantNew = 1 [(gogoproto.nullable) = false];
+}
+
+message QueryAllMerchantNewRequest {
+	cosmos.base.query.v1beta1.PageRequest pagination = 1;
+}
+
+message QueryAllMerchantNewResponse {
+	repeated MerchantNew merchantNew = 1 [(gogoproto.nullable) = false];
 	cosmos.base.query.v1beta1.PageResponse pagination = 2;
 }
 

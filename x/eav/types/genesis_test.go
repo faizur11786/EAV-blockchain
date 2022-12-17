@@ -67,6 +67,14 @@ func TestGenesisState_Validate(t *testing.T) {
 						AttributeId: "1",
 					},
 				},
+				MerchantNewList: []types.MerchantNew{
+					{
+						Address: "0",
+					},
+					{
+						Address: "1",
+					},
+				},
 				// this line is used by starport scaffolding # types/genesis/validField
 			},
 			valid: true,
@@ -140,6 +148,20 @@ func TestGenesisState_Validate(t *testing.T) {
 					{
 						EntityId:    "0",
 						AttributeId: "0",
+					},
+				},
+			},
+			valid: false,
+		},
+		{
+			desc: "duplicated merchantNew",
+			genState: &types.GenesisState{
+				MerchantNewList: []types.MerchantNew{
+					{
+						Address: "0",
+					},
+					{
+						Address: "0",
 					},
 				},
 			},

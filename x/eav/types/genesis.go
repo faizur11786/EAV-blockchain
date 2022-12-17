@@ -10,11 +10,12 @@ const DefaultIndex uint64 = 1
 // DefaultGenesis returns the default genesis state
 func DefaultGenesis() *GenesisState {
 	return &GenesisState{
-		UserList:       []User{},
-		MerchantList:   []Merchant{},
-		EntityTypeList: []EntityType{},
-		AttributeList:  []Attribute{},
-		ValueList:      []Value{},
+		UserList:        []User{},
+		MerchantList:    []Merchant{},
+		EntityTypeList:  []EntityType{},
+		AttributeList:   []Attribute{},
+		ValueList:       []Value{},
+		MerchantNewList: []MerchantNew{},
 		// this line is used by starport scaffolding # genesis/types/default
 		Params: DefaultParams(),
 	}
@@ -72,6 +73,16 @@ func (gs GenesisState) Validate() error {
 			return fmt.Errorf("duplicated index for value")
 		}
 		valueIndexMap[index] = struct{}{}
+	}
+	// Check for duplicated index in merchantNew
+	merchantNewIndexMap := make(map[string]struct{})
+
+	for _, elem := range gs.MerchantNewList {
+		index := string(MerchantNewKey(elem.Address))
+		if _, ok := merchantNewIndexMap[index]; ok {
+			return fmt.Errorf("duplicated index for merchantNew")
+		}
+		merchantNewIndexMap[index] = struct{}{}
 	}
 	// this line is used by starport scaffolding # genesis/types/validate
 

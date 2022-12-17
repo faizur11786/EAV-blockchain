@@ -3,6 +3,7 @@ import _m0 from "protobufjs/minimal";
 import { Attribute } from "./attribute";
 import { EntityType } from "./entity_type";
 import { Merchant } from "./merchant";
+import { MerchantNew } from "./merchant_new";
 import { Params } from "./params";
 import { User } from "./user";
 import { Value } from "./value";
@@ -16,12 +17,21 @@ export interface GenesisState {
   merchantList: Merchant[];
   entityTypeList: EntityType[];
   attributeList: Attribute[];
-  /** this line is used by starport scaffolding # genesis/proto/state */
   valueList: Value[];
+  /** this line is used by starport scaffolding # genesis/proto/state */
+  merchantNewList: MerchantNew[];
 }
 
 function createBaseGenesisState(): GenesisState {
-  return { params: undefined, userList: [], merchantList: [], entityTypeList: [], attributeList: [], valueList: [] };
+  return {
+    params: undefined,
+    userList: [],
+    merchantList: [],
+    entityTypeList: [],
+    attributeList: [],
+    valueList: [],
+    merchantNewList: [],
+  };
 }
 
 export const GenesisState = {
@@ -43,6 +53,9 @@ export const GenesisState = {
     }
     for (const v of message.valueList) {
       Value.encode(v!, writer.uint32(50).fork()).ldelim();
+    }
+    for (const v of message.merchantNewList) {
+      MerchantNew.encode(v!, writer.uint32(58).fork()).ldelim();
     }
     return writer;
   },
@@ -72,6 +85,9 @@ export const GenesisState = {
         case 6:
           message.valueList.push(Value.decode(reader, reader.uint32()));
           break;
+        case 7:
+          message.merchantNewList.push(MerchantNew.decode(reader, reader.uint32()));
+          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -94,6 +110,9 @@ export const GenesisState = {
         ? object.attributeList.map((e: any) => Attribute.fromJSON(e))
         : [],
       valueList: Array.isArray(object?.valueList) ? object.valueList.map((e: any) => Value.fromJSON(e)) : [],
+      merchantNewList: Array.isArray(object?.merchantNewList)
+        ? object.merchantNewList.map((e: any) => MerchantNew.fromJSON(e))
+        : [],
     };
   },
 
@@ -125,6 +144,11 @@ export const GenesisState = {
     } else {
       obj.valueList = [];
     }
+    if (message.merchantNewList) {
+      obj.merchantNewList = message.merchantNewList.map((e) => e ? MerchantNew.toJSON(e) : undefined);
+    } else {
+      obj.merchantNewList = [];
+    }
     return obj;
   },
 
@@ -138,6 +162,7 @@ export const GenesisState = {
     message.entityTypeList = object.entityTypeList?.map((e) => EntityType.fromPartial(e)) || [];
     message.attributeList = object.attributeList?.map((e) => Attribute.fromPartial(e)) || [];
     message.valueList = object.valueList?.map((e) => Value.fromPartial(e)) || [];
+    message.merchantNewList = object.merchantNewList?.map((e) => MerchantNew.fromPartial(e)) || [];
     return message;
   },
 };

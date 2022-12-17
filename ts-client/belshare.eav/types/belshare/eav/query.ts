@@ -4,6 +4,7 @@ import { PageRequest, PageResponse } from "../../cosmos/base/query/v1beta1/pagin
 import { Attribute } from "./attribute";
 import { EntityType } from "./entity_type";
 import { Merchant } from "./merchant";
+import { MerchantNew } from "./merchant_new";
 import { Params } from "./params";
 import { User } from "./user";
 import { Value } from "./value";
@@ -104,6 +105,23 @@ export interface QueryAllValueRequest {
 
 export interface QueryAllValueResponse {
   value: Value[];
+  pagination: PageResponse | undefined;
+}
+
+export interface QueryGetMerchantNewRequest {
+  address: string;
+}
+
+export interface QueryGetMerchantNewResponse {
+  merchantNew: MerchantNew | undefined;
+}
+
+export interface QueryAllMerchantNewRequest {
+  pagination: PageRequest | undefined;
+}
+
+export interface QueryAllMerchantNewResponse {
+  merchantNew: MerchantNew[];
   pagination: PageResponse | undefined;
 }
 
@@ -1270,6 +1288,220 @@ export const QueryAllValueResponse = {
   },
 };
 
+function createBaseQueryGetMerchantNewRequest(): QueryGetMerchantNewRequest {
+  return { address: "" };
+}
+
+export const QueryGetMerchantNewRequest = {
+  encode(message: QueryGetMerchantNewRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.address !== "") {
+      writer.uint32(10).string(message.address);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): QueryGetMerchantNewRequest {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseQueryGetMerchantNewRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.address = reader.string();
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): QueryGetMerchantNewRequest {
+    return { address: isSet(object.address) ? String(object.address) : "" };
+  },
+
+  toJSON(message: QueryGetMerchantNewRequest): unknown {
+    const obj: any = {};
+    message.address !== undefined && (obj.address = message.address);
+    return obj;
+  },
+
+  fromPartial<I extends Exact<DeepPartial<QueryGetMerchantNewRequest>, I>>(object: I): QueryGetMerchantNewRequest {
+    const message = createBaseQueryGetMerchantNewRequest();
+    message.address = object.address ?? "";
+    return message;
+  },
+};
+
+function createBaseQueryGetMerchantNewResponse(): QueryGetMerchantNewResponse {
+  return { merchantNew: undefined };
+}
+
+export const QueryGetMerchantNewResponse = {
+  encode(message: QueryGetMerchantNewResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.merchantNew !== undefined) {
+      MerchantNew.encode(message.merchantNew, writer.uint32(10).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): QueryGetMerchantNewResponse {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseQueryGetMerchantNewResponse();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.merchantNew = MerchantNew.decode(reader, reader.uint32());
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): QueryGetMerchantNewResponse {
+    return { merchantNew: isSet(object.merchantNew) ? MerchantNew.fromJSON(object.merchantNew) : undefined };
+  },
+
+  toJSON(message: QueryGetMerchantNewResponse): unknown {
+    const obj: any = {};
+    message.merchantNew !== undefined
+      && (obj.merchantNew = message.merchantNew ? MerchantNew.toJSON(message.merchantNew) : undefined);
+    return obj;
+  },
+
+  fromPartial<I extends Exact<DeepPartial<QueryGetMerchantNewResponse>, I>>(object: I): QueryGetMerchantNewResponse {
+    const message = createBaseQueryGetMerchantNewResponse();
+    message.merchantNew = (object.merchantNew !== undefined && object.merchantNew !== null)
+      ? MerchantNew.fromPartial(object.merchantNew)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseQueryAllMerchantNewRequest(): QueryAllMerchantNewRequest {
+  return { pagination: undefined };
+}
+
+export const QueryAllMerchantNewRequest = {
+  encode(message: QueryAllMerchantNewRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.pagination !== undefined) {
+      PageRequest.encode(message.pagination, writer.uint32(10).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): QueryAllMerchantNewRequest {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseQueryAllMerchantNewRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.pagination = PageRequest.decode(reader, reader.uint32());
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): QueryAllMerchantNewRequest {
+    return { pagination: isSet(object.pagination) ? PageRequest.fromJSON(object.pagination) : undefined };
+  },
+
+  toJSON(message: QueryAllMerchantNewRequest): unknown {
+    const obj: any = {};
+    message.pagination !== undefined
+      && (obj.pagination = message.pagination ? PageRequest.toJSON(message.pagination) : undefined);
+    return obj;
+  },
+
+  fromPartial<I extends Exact<DeepPartial<QueryAllMerchantNewRequest>, I>>(object: I): QueryAllMerchantNewRequest {
+    const message = createBaseQueryAllMerchantNewRequest();
+    message.pagination = (object.pagination !== undefined && object.pagination !== null)
+      ? PageRequest.fromPartial(object.pagination)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseQueryAllMerchantNewResponse(): QueryAllMerchantNewResponse {
+  return { merchantNew: [], pagination: undefined };
+}
+
+export const QueryAllMerchantNewResponse = {
+  encode(message: QueryAllMerchantNewResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    for (const v of message.merchantNew) {
+      MerchantNew.encode(v!, writer.uint32(10).fork()).ldelim();
+    }
+    if (message.pagination !== undefined) {
+      PageResponse.encode(message.pagination, writer.uint32(18).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): QueryAllMerchantNewResponse {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseQueryAllMerchantNewResponse();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.merchantNew.push(MerchantNew.decode(reader, reader.uint32()));
+          break;
+        case 2:
+          message.pagination = PageResponse.decode(reader, reader.uint32());
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): QueryAllMerchantNewResponse {
+    return {
+      merchantNew: Array.isArray(object?.merchantNew)
+        ? object.merchantNew.map((e: any) => MerchantNew.fromJSON(e))
+        : [],
+      pagination: isSet(object.pagination) ? PageResponse.fromJSON(object.pagination) : undefined,
+    };
+  },
+
+  toJSON(message: QueryAllMerchantNewResponse): unknown {
+    const obj: any = {};
+    if (message.merchantNew) {
+      obj.merchantNew = message.merchantNew.map((e) => e ? MerchantNew.toJSON(e) : undefined);
+    } else {
+      obj.merchantNew = [];
+    }
+    message.pagination !== undefined
+      && (obj.pagination = message.pagination ? PageResponse.toJSON(message.pagination) : undefined);
+    return obj;
+  },
+
+  fromPartial<I extends Exact<DeepPartial<QueryAllMerchantNewResponse>, I>>(object: I): QueryAllMerchantNewResponse {
+    const message = createBaseQueryAllMerchantNewResponse();
+    message.merchantNew = object.merchantNew?.map((e) => MerchantNew.fromPartial(e)) || [];
+    message.pagination = (object.pagination !== undefined && object.pagination !== null)
+      ? PageResponse.fromPartial(object.pagination)
+      : undefined;
+    return message;
+  },
+};
+
 /** Query defines the gRPC querier service. */
 export interface Query {
   /** Parameters queries the parameters of the module. */
@@ -1294,6 +1526,10 @@ export interface Query {
   Value(request: QueryGetValueRequest): Promise<QueryGetValueResponse>;
   /** Queries a list of Value items. */
   ValueAll(request: QueryAllValueRequest): Promise<QueryAllValueResponse>;
+  /** Queries a MerchantNew by index. */
+  MerchantNew(request: QueryGetMerchantNewRequest): Promise<QueryGetMerchantNewResponse>;
+  /** Queries a list of MerchantNew items. */
+  MerchantNewAll(request: QueryAllMerchantNewRequest): Promise<QueryAllMerchantNewResponse>;
 }
 
 export class QueryClientImpl implements Query {
@@ -1311,6 +1547,8 @@ export class QueryClientImpl implements Query {
     this.AttributeAll = this.AttributeAll.bind(this);
     this.Value = this.Value.bind(this);
     this.ValueAll = this.ValueAll.bind(this);
+    this.MerchantNew = this.MerchantNew.bind(this);
+    this.MerchantNewAll = this.MerchantNewAll.bind(this);
   }
   Params(request: QueryParamsRequest): Promise<QueryParamsResponse> {
     const data = QueryParamsRequest.encode(request).finish();
@@ -1376,6 +1614,18 @@ export class QueryClientImpl implements Query {
     const data = QueryAllValueRequest.encode(request).finish();
     const promise = this.rpc.request("belshare.eav.Query", "ValueAll", data);
     return promise.then((data) => QueryAllValueResponse.decode(new _m0.Reader(data)));
+  }
+
+  MerchantNew(request: QueryGetMerchantNewRequest): Promise<QueryGetMerchantNewResponse> {
+    const data = QueryGetMerchantNewRequest.encode(request).finish();
+    const promise = this.rpc.request("belshare.eav.Query", "MerchantNew", data);
+    return promise.then((data) => QueryGetMerchantNewResponse.decode(new _m0.Reader(data)));
+  }
+
+  MerchantNewAll(request: QueryAllMerchantNewRequest): Promise<QueryAllMerchantNewResponse> {
+    const data = QueryAllMerchantNewRequest.encode(request).finish();
+    const promise = this.rpc.request("belshare.eav.Query", "MerchantNewAll", data);
+    return promise.then((data) => QueryAllMerchantNewResponse.decode(new _m0.Reader(data)));
   }
 }
 

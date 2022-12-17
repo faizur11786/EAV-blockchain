@@ -27,6 +27,12 @@ export interface EavMerchant {
   address?: string;
 }
 
+export interface EavMerchantNew {
+  address?: string;
+  guid?: string;
+  creator?: string;
+}
+
 export interface EavMsgCraeteAtteibuteResponse {
   id?: string;
 }
@@ -65,6 +71,21 @@ export interface EavQueryAllAttributeResponse {
 
 export interface EavQueryAllEntityTypeResponse {
   entityType?: EavEntityType[];
+
+  /**
+   * PageResponse is to be embedded in gRPC response messages where the
+   * corresponding request message has used PageRequest.
+   *
+   *  message SomeResponse {
+   *          repeated Bar results = 1;
+   *          PageResponse page = 2;
+   *  }
+   */
+  pagination?: V1Beta1PageResponse;
+}
+
+export interface EavQueryAllMerchantNewResponse {
+  merchantNew?: EavMerchantNew[];
 
   /**
    * PageResponse is to be embedded in gRPC response messages where the
@@ -129,6 +150,10 @@ export interface EavQueryGetAttributeResponse {
 
 export interface EavQueryGetEntityTypeResponse {
   entityType?: EavEntityType;
+}
+
+export interface EavQueryGetMerchantNewResponse {
+  merchantNew?: EavMerchantNew;
 }
 
 export interface EavQueryGetMerchantResponse {
@@ -495,6 +520,48 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
   queryMerchant = (guid: string, creator: string, params: RequestParams = {}) =>
     this.request<EavQueryGetMerchantResponse, RpcStatus>({
       path: `/belShare/eav/merchant/${guid}/${creator}`,
+      method: "GET",
+      format: "json",
+      ...params,
+    });
+
+  /**
+   * No description
+   *
+   * @tags Query
+   * @name QueryMerchantNewAll
+   * @summary Queries a list of MerchantNew items.
+   * @request GET:/belShare/eav/merchant_new
+   */
+  queryMerchantNewAll = (
+    query?: {
+      "pagination.key"?: string;
+      "pagination.offset"?: string;
+      "pagination.limit"?: string;
+      "pagination.count_total"?: boolean;
+      "pagination.reverse"?: boolean;
+    },
+    params: RequestParams = {},
+  ) =>
+    this.request<EavQueryAllMerchantNewResponse, RpcStatus>({
+      path: `/belShare/eav/merchant_new`,
+      method: "GET",
+      query: query,
+      format: "json",
+      ...params,
+    });
+
+  /**
+   * No description
+   *
+   * @tags Query
+   * @name QueryMerchantNew
+   * @summary Queries a MerchantNew by index.
+   * @request GET:/belShare/eav/merchant_new/{address}
+   */
+  queryMerchantNew = (address: string, params: RequestParams = {}) =>
+    this.request<EavQueryGetMerchantNewResponse, RpcStatus>({
+      path: `/belShare/eav/merchant_new/${address}`,
       method: "GET",
       format: "json",
       ...params,
