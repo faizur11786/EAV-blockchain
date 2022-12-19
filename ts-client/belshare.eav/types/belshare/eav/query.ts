@@ -2,6 +2,7 @@
 import _m0 from "protobufjs/minimal";
 import { PageRequest, PageResponse } from "../../cosmos/base/query/v1beta1/pagination";
 import { Attribute } from "./attribute";
+import { AttributeResponse } from "./attribute_response";
 import { EntityType } from "./entity_type";
 import { Merchant } from "./merchant";
 import { MerchantNew } from "./merchant_new";
@@ -116,8 +117,7 @@ export interface QueryGetMerchantNewRequest {
 
 export interface QueryGetMerchantNewResponse {
   merchantNew: MerchantNew | undefined;
-  attributes: Attribute[];
-  values: Value[];
+  attributes: AttributeResponse[];
 }
 
 export interface QueryAllMerchantNewRequest {
@@ -1376,7 +1376,7 @@ export const QueryGetMerchantNewRequest = {
 };
 
 function createBaseQueryGetMerchantNewResponse(): QueryGetMerchantNewResponse {
-  return { merchantNew: undefined, attributes: [], values: [] };
+  return { merchantNew: undefined, attributes: [] };
 }
 
 export const QueryGetMerchantNewResponse = {
@@ -1385,10 +1385,7 @@ export const QueryGetMerchantNewResponse = {
       MerchantNew.encode(message.merchantNew, writer.uint32(10).fork()).ldelim();
     }
     for (const v of message.attributes) {
-      Attribute.encode(v!, writer.uint32(18).fork()).ldelim();
-    }
-    for (const v of message.values) {
-      Value.encode(v!, writer.uint32(26).fork()).ldelim();
+      AttributeResponse.encode(v!, writer.uint32(18).fork()).ldelim();
     }
     return writer;
   },
@@ -1404,10 +1401,7 @@ export const QueryGetMerchantNewResponse = {
           message.merchantNew = MerchantNew.decode(reader, reader.uint32());
           break;
         case 2:
-          message.attributes.push(Attribute.decode(reader, reader.uint32()));
-          break;
-        case 3:
-          message.values.push(Value.decode(reader, reader.uint32()));
+          message.attributes.push(AttributeResponse.decode(reader, reader.uint32()));
           break;
         default:
           reader.skipType(tag & 7);
@@ -1420,8 +1414,9 @@ export const QueryGetMerchantNewResponse = {
   fromJSON(object: any): QueryGetMerchantNewResponse {
     return {
       merchantNew: isSet(object.merchantNew) ? MerchantNew.fromJSON(object.merchantNew) : undefined,
-      attributes: Array.isArray(object?.attributes) ? object.attributes.map((e: any) => Attribute.fromJSON(e)) : [],
-      values: Array.isArray(object?.values) ? object.values.map((e: any) => Value.fromJSON(e)) : [],
+      attributes: Array.isArray(object?.attributes)
+        ? object.attributes.map((e: any) => AttributeResponse.fromJSON(e))
+        : [],
     };
   },
 
@@ -1430,14 +1425,9 @@ export const QueryGetMerchantNewResponse = {
     message.merchantNew !== undefined
       && (obj.merchantNew = message.merchantNew ? MerchantNew.toJSON(message.merchantNew) : undefined);
     if (message.attributes) {
-      obj.attributes = message.attributes.map((e) => e ? Attribute.toJSON(e) : undefined);
+      obj.attributes = message.attributes.map((e) => e ? AttributeResponse.toJSON(e) : undefined);
     } else {
       obj.attributes = [];
-    }
-    if (message.values) {
-      obj.values = message.values.map((e) => e ? Value.toJSON(e) : undefined);
-    } else {
-      obj.values = [];
     }
     return obj;
   },
@@ -1447,8 +1437,7 @@ export const QueryGetMerchantNewResponse = {
     message.merchantNew = (object.merchantNew !== undefined && object.merchantNew !== null)
       ? MerchantNew.fromPartial(object.merchantNew)
       : undefined;
-    message.attributes = object.attributes?.map((e) => Attribute.fromPartial(e)) || [];
-    message.values = object.values?.map((e) => Value.fromPartial(e)) || [];
+    message.attributes = object.attributes?.map((e) => AttributeResponse.fromPartial(e)) || [];
     return message;
   },
 };

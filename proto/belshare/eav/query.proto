@@ -13,6 +13,7 @@ import "belshare/eav/merchant_new.proto";
 import "belshare/eav/new_user.proto";
 // this line is used by starport scaffolding # 1
 import "belshare/eav/attribute.proto";
+import "belshare/eav/attribute_response.proto";
 
 option go_package = "belShare/x/eav/types";
 
@@ -207,8 +208,7 @@ message QueryGetMerchantNewRequest {
 
 message QueryGetMerchantNewResponse {
 	MerchantNew merchantNew = 1 [(gogoproto.nullable) = false];
-    repeated Attribute attributes = 2 [(gogoproto.nullable) = false];
-    repeated Value values = 3 [(gogoproto.nullable) = false];
+    repeated AttributeResponse attributes = 2 [(gogoproto.nullable) = false];
 }
 
 message QueryAllMerchantNewRequest {

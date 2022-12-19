@@ -15,6 +15,13 @@ export interface EavAttribute {
   entityId?: string;
 }
 
+export interface EavAttributeResponse {
+  label?: string;
+  value?: string;
+  attributeId?: string;
+  valueId?: string;
+}
+
 export interface EavEntityType {
   guid?: string;
   name?: string;
@@ -188,8 +195,7 @@ export interface EavQueryGetEntityTypeResponse {
 
 export interface EavQueryGetMerchantNewResponse {
   merchantNew?: EavMerchantNew;
-  attributes?: EavAttribute[];
-  values?: EavValue[];
+  attributes?: EavAttributeResponse[];
 }
 
 export interface EavQueryGetMerchantResponse {

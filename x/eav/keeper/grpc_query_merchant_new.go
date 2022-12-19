@@ -48,28 +48,33 @@ func (k Keeper) MerchantNew(c context.Context, req *types.QueryGetMerchantNewReq
 
 	_, found := k.GetEntityType(ctx, req.EntityId)
 	if !found {
-		return nil, status.Error(codes.NotFound, "Entity not found",)
+		return nil, status.Error(codes.NotFound, "Entity not found")
 	}
-	
+
 	val, found := k.GetMerchantNew(
 		ctx,
 		req.Address,
 	)
-	
+
 	if !found {
 		return nil, status.Error(codes.NotFound, "not found")
 	}
 	
 	attributes := k.GetAttributesByEntity(ctx, req.EntityId)
+	
+	var values []types.AttributeResponse
 
 
-	var values []types.Value
-
-	for _, attribute := range attributes{
+	for _, attribute := range attributes {
 		value, _ := k.GetValue(ctx, val.Guid, attribute.Guid)
-		values = append(values, value)
+		values = append(values, types.AttributeResponse{
+			Label: attribute.Name,
+			AttributeId: attribute.Guid,
+			Value: value.Value,
+			ValueId: value.Guid,
+		})
 	}
 
 
-	return &types.QueryGetMerchantNewResponse{MerchantNew: val, Attributes: attributes, Values: values}, nil
+	return &types.QueryGetMerchantNewResponse{MerchantNew: val, Attributes: values}, nil
 }

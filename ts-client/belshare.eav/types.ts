@@ -1,4 +1,5 @@
 import { Attribute } from "./types/belshare/eav/attribute"
+import { AttributeResponse } from "./types/belshare/eav/attribute_response"
 import { EntityType } from "./types/belshare/eav/entity_type"
 import { Merchant } from "./types/belshare/eav/merchant"
 import { MerchantNew } from "./types/belshare/eav/merchant_new"
@@ -10,6 +11,7 @@ import { Value } from "./types/belshare/eav/value"
 
 export {     
     Attribute,
+    AttributeResponse,
     EntityType,
     Merchant,
     MerchantNew,

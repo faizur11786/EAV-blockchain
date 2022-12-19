@@ -19,38 +19,35 @@ func (k Keeper) EntityAttributes(goCtx context.Context, req *types.QueryEntityAt
 
 	_, found := k.GetEntityType(ctx, req.EntityId)
 	if !found {
-		return nil, status.Error(codes.NotFound, "Entity not found",)
+		return nil, status.Error(codes.NotFound, "Entity not found")
 	}
 
-
 	entities := k.GetAllAttribute(ctx)
-	
+
 	var entityAtt []*types.Attribute
 
-
 	for _, entity := range entities {
-		if entity.EntityId == req.EntityId{
-			entityAtt =  append(entityAtt, &types.Attribute{
-				Guid: entity.Guid,
-				Name: entity.Name,
+		if entity.EntityId == req.EntityId {
+			entityAtt = append(entityAtt, &types.Attribute{
+				Guid:     entity.Guid,
+				Name:     entity.Name,
 				EntityId: entity.EntityId,
 			})
 		}
 	}
 
-	return &types.QueryEntityAttributesResponse{Attributes:entityAtt}, nil
+	return &types.QueryEntityAttributesResponse{Attributes: entityAtt}, nil
 }
 
-
-func (k Keeper) GetAttributesByEntity(ctx sdk.Context, entityId string) (entityAtt []types.Attribute){
+func (k Keeper) GetAttributesByEntity(ctx sdk.Context, entityId string) (entityAtt []types.Attribute) {
 
 	entities := k.GetAllAttribute(ctx)
 
 	for _, entity := range entities {
-		if entity.EntityId == entityId{
-			entityAtt =  append(entityAtt, types.Attribute{
-				Guid: entity.Guid,
-				Name: entity.Name,
+		if entity.EntityId == entityId {
+			entityAtt = append(entityAtt, types.Attribute{
+				Guid:     entity.Guid,
+				Name:     entity.Name,
 				EntityId: entity.EntityId,
 			})
 		}
