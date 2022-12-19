@@ -1,0 +1,12 @@
+syntax = "proto3";
+package belshare.eav;
+
+option go_package = "belShare/x/eav/types";
+
+message NewUser {
+    string address = 1; 
+  string guid = 2; 
+  string creator = 3; 
+  string createdAt = 4;
+}
+

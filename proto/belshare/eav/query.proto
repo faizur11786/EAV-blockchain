@@ -8,10 +8,11 @@ import "belshare/eav/params.proto";
 import "belshare/eav/user.proto";
 import "belshare/eav/merchant.proto";
 import "belshare/eav/entity_type.proto";
-import "belshare/eav/attribute.proto";
 import "belshare/eav/value.proto";
 import "belshare/eav/merchant_new.proto";
+import "belshare/eav/new_user.proto";
 // this line is used by starport scaffolding # 1
+import "belshare/eav/attribute.proto";
 
 option go_package = "belShare/x/eav/types";
 
@@ -73,12 +74,27 @@ service Query {
 
 // Queries a MerchantNew by index.
 	rpc MerchantNew(QueryGetMerchantNewRequest) returns (QueryGetMerchantNewResponse) {
-		option (google.api.http).get = "/belShare/eav/merchant_new/{address}";
+		option (google.api.http).get = "/belShare/eav/merchant_new/{address}/{entityId}";
 	}
 
 	// Queries a list of MerchantNew items.
 	rpc MerchantNewAll(QueryAllMerchantNewRequest) returns (QueryAllMerchantNewResponse) {
 		option (google.api.http).get = "/belShare/eav/merchant_new";
+	}
+
+// Queries a NewUser by index.
+	rpc NewUser(QueryGetNewUserRequest) returns (QueryGetNewUserResponse) {
+		option (google.api.http).get = "/belShare/eav/new_user/{address}";
+	}
+
+	// Queries a list of NewUser items.
+	rpc NewUserAll(QueryAllNewUserRequest) returns (QueryAllNewUserResponse) {
+		option (google.api.http).get = "/belShare/eav/new_user";
+	}
+
+// Queries a list of EntityAttributes items.
+	rpc EntityAttributes(QueryEntityAttributesRequest) returns (QueryEntityAttributesResponse) {
+		option (google.api.http).get = "/belShare/eav/entity_attributes/{entityId}";
 	}
 
 // this line is used by starport scaffolding # 2
@@ -186,11 +202,13 @@ message QueryAllValueResponse {
 
 message QueryGetMerchantNewRequest {
 	  string address = 1;
-
+      string entityId = 2;
 }
 
 message QueryGetMerchantNewResponse {
 	MerchantNew merchantNew = 1 [(gogoproto.nullable) = false];
+    repeated Attribute attributes = 2 [(gogoproto.nullable) = false];
+    repeated Value values = 3 [(gogoproto.nullable) = false];
 }
 
 message QueryAllMerchantNewRequest {
@@ -200,6 +218,32 @@ message QueryAllMerchantNewRequest {
 message QueryAllMerchantNewResponse {
 	repeated MerchantNew merchantNew = 1 [(gogoproto.nullable) = false];
 	cosmos.base.query.v1beta1.PageResponse pagination = 2;
+}
+
+message QueryGetNewUserRequest {
+	  string address = 1;
+
+}
+
+message QueryGetNewUserResponse {
+	NewUser newUser = 1 [(gogoproto.nullable) = false];
+}
+
+message QueryAllNewUserRequest {
+	cosmos.base.query.v1beta1.PageRequest pagination = 1;
+}
+
+message QueryAllNewUserResponse {
+	repeated NewUser newUser = 1 [(gogoproto.nullable) = false];
+	cosmos.base.query.v1beta1.PageResponse pagination = 2;
+}
+
+message QueryEntityAttributesRequest {
+  string entityId = 1;
+}
+
+message QueryEntityAttributesResponse {
+  repeated Attribute attributes = 1;
 }
 
 // this line is used by starport scaffolding # 3

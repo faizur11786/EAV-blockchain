@@ -14,7 +14,6 @@ import (
 func (k msgServer) NewMerchant(goCtx context.Context, msg *types.MsgNewMerchant) (*types.MsgNewMerchantResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
-
 	//  Check if merchain already exist
 	_, found := k.GetMerchantNew(ctx, msg.Address)
 	if found {
@@ -30,10 +29,9 @@ func (k msgServer) NewMerchant(goCtx context.Context, msg *types.MsgNewMerchant)
 		Address: msg.Address,
 	}
 
-	// Write Merchant information to the store 
+	// Write Merchant information to the store
 	k.SetMerchantNew(ctx, shop)
 
-	
 	for _, result := range msg.Attributes {
 
 		// Check if Attribute exist which merhcant want to store.
@@ -42,13 +40,13 @@ func (k msgServer) NewMerchant(goCtx context.Context, msg *types.MsgNewMerchant)
 			return nil, sdkerrors.Wrap(sdkerrors.ErrNotFound, fmt.Sprintf("Attribute %d doesn't exist", result.Guid))
 		}
 
-		// Check if Attribute-Value already exist 
-		value, found := k.GetValue(ctx, id.String(), attribute.Guid);
+		// Check if Attribute-Value already exist
+		value, found := k.GetValue(ctx, id.String(), attribute.Guid)
 		if found && value.Value == result.Name {
 			return nil, sdkerrors.Wrap(types.ErrDuplicate, fmt.Sprintf("Value %d exist", result.Name))
 		}
 
-		// Write Value information to the store 
+		// Write Value information to the store
 		k.SetValue(ctx, types.Value{
 			EntityId:    id.String(),
 			AttributeId: attribute.Guid,
@@ -56,8 +54,6 @@ func (k msgServer) NewMerchant(goCtx context.Context, msg *types.MsgNewMerchant)
 			Value:       result.Name,
 		})
 	}
-
-
 
 	return &types.MsgNewMerchantResponse{}, nil
 }

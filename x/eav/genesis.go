@@ -33,6 +33,10 @@ func InitGenesis(ctx sdk.Context, k keeper.Keeper, genState types.GenesisState) 
 	for _, elem := range genState.MerchantNewList {
 		k.SetMerchantNew(ctx, elem)
 	}
+	// Set all the newUser
+	for _, elem := range genState.NewUserList {
+		k.SetNewUser(ctx, elem)
+	}
 	// this line is used by starport scaffolding # genesis/module/init
 	k.SetParams(ctx, genState.Params)
 }
@@ -48,6 +52,7 @@ func ExportGenesis(ctx sdk.Context, k keeper.Keeper) *types.GenesisState {
 	genesis.AttributeList = k.GetAllAttribute(ctx)
 	genesis.ValueList = k.GetAllValue(ctx)
 	genesis.MerchantNewList = k.GetAllMerchantNew(ctx)
+	genesis.NewUserList = k.GetAllNewUser(ctx)
 	// this line is used by starport scaffolding # genesis/module/export
 
 	return genesis

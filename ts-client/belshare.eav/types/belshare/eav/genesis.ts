@@ -4,6 +4,7 @@ import { Attribute } from "./attribute";
 import { EntityType } from "./entity_type";
 import { Merchant } from "./merchant";
 import { MerchantNew } from "./merchant_new";
+import { NewUser } from "./new_user";
 import { Params } from "./params";
 import { User } from "./user";
 import { Value } from "./value";
@@ -18,8 +19,9 @@ export interface GenesisState {
   entityTypeList: EntityType[];
   attributeList: Attribute[];
   valueList: Value[];
-  /** this line is used by starport scaffolding # genesis/proto/state */
   merchantNewList: MerchantNew[];
+  /** this line is used by starport scaffolding # genesis/proto/state */
+  newUserList: NewUser[];
 }
 
 function createBaseGenesisState(): GenesisState {
@@ -31,6 +33,7 @@ function createBaseGenesisState(): GenesisState {
     attributeList: [],
     valueList: [],
     merchantNewList: [],
+    newUserList: [],
   };
 }
 
@@ -56,6 +59,9 @@ export const GenesisState = {
     }
     for (const v of message.merchantNewList) {
       MerchantNew.encode(v!, writer.uint32(58).fork()).ldelim();
+    }
+    for (const v of message.newUserList) {
+      NewUser.encode(v!, writer.uint32(66).fork()).ldelim();
     }
     return writer;
   },
@@ -88,6 +94,9 @@ export const GenesisState = {
         case 7:
           message.merchantNewList.push(MerchantNew.decode(reader, reader.uint32()));
           break;
+        case 8:
+          message.newUserList.push(NewUser.decode(reader, reader.uint32()));
+          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -113,6 +122,7 @@ export const GenesisState = {
       merchantNewList: Array.isArray(object?.merchantNewList)
         ? object.merchantNewList.map((e: any) => MerchantNew.fromJSON(e))
         : [],
+      newUserList: Array.isArray(object?.newUserList) ? object.newUserList.map((e: any) => NewUser.fromJSON(e)) : [],
     };
   },
 
@@ -149,6 +159,11 @@ export const GenesisState = {
     } else {
       obj.merchantNewList = [];
     }
+    if (message.newUserList) {
+      obj.newUserList = message.newUserList.map((e) => e ? NewUser.toJSON(e) : undefined);
+    } else {
+      obj.newUserList = [];
+    }
     return obj;
   },
 
@@ -163,6 +178,7 @@ export const GenesisState = {
     message.attributeList = object.attributeList?.map((e) => Attribute.fromPartial(e)) || [];
     message.valueList = object.valueList?.map((e) => Value.fromPartial(e)) || [];
     message.merchantNewList = object.merchantNewList?.map((e) => MerchantNew.fromPartial(e)) || [];
+    message.newUserList = object.newUserList?.map((e) => NewUser.fromPartial(e)) || [];
     return message;
   },
 };

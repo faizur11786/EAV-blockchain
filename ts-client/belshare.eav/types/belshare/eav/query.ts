@@ -5,6 +5,7 @@ import { Attribute } from "./attribute";
 import { EntityType } from "./entity_type";
 import { Merchant } from "./merchant";
 import { MerchantNew } from "./merchant_new";
+import { NewUser } from "./new_user";
 import { Params } from "./params";
 import { User } from "./user";
 import { Value } from "./value";
@@ -110,10 +111,13 @@ export interface QueryAllValueResponse {
 
 export interface QueryGetMerchantNewRequest {
   address: string;
+  entityId: string;
 }
 
 export interface QueryGetMerchantNewResponse {
   merchantNew: MerchantNew | undefined;
+  attributes: Attribute[];
+  values: Value[];
 }
 
 export interface QueryAllMerchantNewRequest {
@@ -123,6 +127,31 @@ export interface QueryAllMerchantNewRequest {
 export interface QueryAllMerchantNewResponse {
   merchantNew: MerchantNew[];
   pagination: PageResponse | undefined;
+}
+
+export interface QueryGetNewUserRequest {
+  address: string;
+}
+
+export interface QueryGetNewUserResponse {
+  newUser: NewUser | undefined;
+}
+
+export interface QueryAllNewUserRequest {
+  pagination: PageRequest | undefined;
+}
+
+export interface QueryAllNewUserResponse {
+  newUser: NewUser[];
+  pagination: PageResponse | undefined;
+}
+
+export interface QueryEntityAttributesRequest {
+  entityId: string;
+}
+
+export interface QueryEntityAttributesResponse {
+  attributes: Attribute[];
 }
 
 function createBaseQueryParamsRequest(): QueryParamsRequest {
@@ -1289,13 +1318,16 @@ export const QueryAllValueResponse = {
 };
 
 function createBaseQueryGetMerchantNewRequest(): QueryGetMerchantNewRequest {
-  return { address: "" };
+  return { address: "", entityId: "" };
 }
 
 export const QueryGetMerchantNewRequest = {
   encode(message: QueryGetMerchantNewRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.address !== "") {
       writer.uint32(10).string(message.address);
+    }
+    if (message.entityId !== "") {
+      writer.uint32(18).string(message.entityId);
     }
     return writer;
   },
@@ -1310,6 +1342,9 @@ export const QueryGetMerchantNewRequest = {
         case 1:
           message.address = reader.string();
           break;
+        case 2:
+          message.entityId = reader.string();
+          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -1319,30 +1354,41 @@ export const QueryGetMerchantNewRequest = {
   },
 
   fromJSON(object: any): QueryGetMerchantNewRequest {
-    return { address: isSet(object.address) ? String(object.address) : "" };
+    return {
+      address: isSet(object.address) ? String(object.address) : "",
+      entityId: isSet(object.entityId) ? String(object.entityId) : "",
+    };
   },
 
   toJSON(message: QueryGetMerchantNewRequest): unknown {
     const obj: any = {};
     message.address !== undefined && (obj.address = message.address);
+    message.entityId !== undefined && (obj.entityId = message.entityId);
     return obj;
   },
 
   fromPartial<I extends Exact<DeepPartial<QueryGetMerchantNewRequest>, I>>(object: I): QueryGetMerchantNewRequest {
     const message = createBaseQueryGetMerchantNewRequest();
     message.address = object.address ?? "";
+    message.entityId = object.entityId ?? "";
     return message;
   },
 };
 
 function createBaseQueryGetMerchantNewResponse(): QueryGetMerchantNewResponse {
-  return { merchantNew: undefined };
+  return { merchantNew: undefined, attributes: [], values: [] };
 }
 
 export const QueryGetMerchantNewResponse = {
   encode(message: QueryGetMerchantNewResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.merchantNew !== undefined) {
       MerchantNew.encode(message.merchantNew, writer.uint32(10).fork()).ldelim();
+    }
+    for (const v of message.attributes) {
+      Attribute.encode(v!, writer.uint32(18).fork()).ldelim();
+    }
+    for (const v of message.values) {
+      Value.encode(v!, writer.uint32(26).fork()).ldelim();
     }
     return writer;
   },
@@ -1357,6 +1403,12 @@ export const QueryGetMerchantNewResponse = {
         case 1:
           message.merchantNew = MerchantNew.decode(reader, reader.uint32());
           break;
+        case 2:
+          message.attributes.push(Attribute.decode(reader, reader.uint32()));
+          break;
+        case 3:
+          message.values.push(Value.decode(reader, reader.uint32()));
+          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -1366,13 +1418,27 @@ export const QueryGetMerchantNewResponse = {
   },
 
   fromJSON(object: any): QueryGetMerchantNewResponse {
-    return { merchantNew: isSet(object.merchantNew) ? MerchantNew.fromJSON(object.merchantNew) : undefined };
+    return {
+      merchantNew: isSet(object.merchantNew) ? MerchantNew.fromJSON(object.merchantNew) : undefined,
+      attributes: Array.isArray(object?.attributes) ? object.attributes.map((e: any) => Attribute.fromJSON(e)) : [],
+      values: Array.isArray(object?.values) ? object.values.map((e: any) => Value.fromJSON(e)) : [],
+    };
   },
 
   toJSON(message: QueryGetMerchantNewResponse): unknown {
     const obj: any = {};
     message.merchantNew !== undefined
       && (obj.merchantNew = message.merchantNew ? MerchantNew.toJSON(message.merchantNew) : undefined);
+    if (message.attributes) {
+      obj.attributes = message.attributes.map((e) => e ? Attribute.toJSON(e) : undefined);
+    } else {
+      obj.attributes = [];
+    }
+    if (message.values) {
+      obj.values = message.values.map((e) => e ? Value.toJSON(e) : undefined);
+    } else {
+      obj.values = [];
+    }
     return obj;
   },
 
@@ -1381,6 +1447,8 @@ export const QueryGetMerchantNewResponse = {
     message.merchantNew = (object.merchantNew !== undefined && object.merchantNew !== null)
       ? MerchantNew.fromPartial(object.merchantNew)
       : undefined;
+    message.attributes = object.attributes?.map((e) => Attribute.fromPartial(e)) || [];
+    message.values = object.values?.map((e) => Value.fromPartial(e)) || [];
     return message;
   },
 };
@@ -1502,6 +1570,319 @@ export const QueryAllMerchantNewResponse = {
   },
 };
 
+function createBaseQueryGetNewUserRequest(): QueryGetNewUserRequest {
+  return { address: "" };
+}
+
+export const QueryGetNewUserRequest = {
+  encode(message: QueryGetNewUserRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.address !== "") {
+      writer.uint32(10).string(message.address);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): QueryGetNewUserRequest {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseQueryGetNewUserRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.address = reader.string();
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): QueryGetNewUserRequest {
+    return { address: isSet(object.address) ? String(object.address) : "" };
+  },
+
+  toJSON(message: QueryGetNewUserRequest): unknown {
+    const obj: any = {};
+    message.address !== undefined && (obj.address = message.address);
+    return obj;
+  },
+
+  fromPartial<I extends Exact<DeepPartial<QueryGetNewUserRequest>, I>>(object: I): QueryGetNewUserRequest {
+    const message = createBaseQueryGetNewUserRequest();
+    message.address = object.address ?? "";
+    return message;
+  },
+};
+
+function createBaseQueryGetNewUserResponse(): QueryGetNewUserResponse {
+  return { newUser: undefined };
+}
+
+export const QueryGetNewUserResponse = {
+  encode(message: QueryGetNewUserResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.newUser !== undefined) {
+      NewUser.encode(message.newUser, writer.uint32(10).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): QueryGetNewUserResponse {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseQueryGetNewUserResponse();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.newUser = NewUser.decode(reader, reader.uint32());
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): QueryGetNewUserResponse {
+    return { newUser: isSet(object.newUser) ? NewUser.fromJSON(object.newUser) : undefined };
+  },
+
+  toJSON(message: QueryGetNewUserResponse): unknown {
+    const obj: any = {};
+    message.newUser !== undefined && (obj.newUser = message.newUser ? NewUser.toJSON(message.newUser) : undefined);
+    return obj;
+  },
+
+  fromPartial<I extends Exact<DeepPartial<QueryGetNewUserResponse>, I>>(object: I): QueryGetNewUserResponse {
+    const message = createBaseQueryGetNewUserResponse();
+    message.newUser = (object.newUser !== undefined && object.newUser !== null)
+      ? NewUser.fromPartial(object.newUser)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseQueryAllNewUserRequest(): QueryAllNewUserRequest {
+  return { pagination: undefined };
+}
+
+export const QueryAllNewUserRequest = {
+  encode(message: QueryAllNewUserRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.pagination !== undefined) {
+      PageRequest.encode(message.pagination, writer.uint32(10).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): QueryAllNewUserRequest {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseQueryAllNewUserRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.pagination = PageRequest.decode(reader, reader.uint32());
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): QueryAllNewUserRequest {
+    return { pagination: isSet(object.pagination) ? PageRequest.fromJSON(object.pagination) : undefined };
+  },
+
+  toJSON(message: QueryAllNewUserRequest): unknown {
+    const obj: any = {};
+    message.pagination !== undefined
+      && (obj.pagination = message.pagination ? PageRequest.toJSON(message.pagination) : undefined);
+    return obj;
+  },
+
+  fromPartial<I extends Exact<DeepPartial<QueryAllNewUserRequest>, I>>(object: I): QueryAllNewUserRequest {
+    const message = createBaseQueryAllNewUserRequest();
+    message.pagination = (object.pagination !== undefined && object.pagination !== null)
+      ? PageRequest.fromPartial(object.pagination)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseQueryAllNewUserResponse(): QueryAllNewUserResponse {
+  return { newUser: [], pagination: undefined };
+}
+
+export const QueryAllNewUserResponse = {
+  encode(message: QueryAllNewUserResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    for (const v of message.newUser) {
+      NewUser.encode(v!, writer.uint32(10).fork()).ldelim();
+    }
+    if (message.pagination !== undefined) {
+      PageResponse.encode(message.pagination, writer.uint32(18).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): QueryAllNewUserResponse {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseQueryAllNewUserResponse();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.newUser.push(NewUser.decode(reader, reader.uint32()));
+          break;
+        case 2:
+          message.pagination = PageResponse.decode(reader, reader.uint32());
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): QueryAllNewUserResponse {
+    return {
+      newUser: Array.isArray(object?.newUser) ? object.newUser.map((e: any) => NewUser.fromJSON(e)) : [],
+      pagination: isSet(object.pagination) ? PageResponse.fromJSON(object.pagination) : undefined,
+    };
+  },
+
+  toJSON(message: QueryAllNewUserResponse): unknown {
+    const obj: any = {};
+    if (message.newUser) {
+      obj.newUser = message.newUser.map((e) => e ? NewUser.toJSON(e) : undefined);
+    } else {
+      obj.newUser = [];
+    }
+    message.pagination !== undefined
+      && (obj.pagination = message.pagination ? PageResponse.toJSON(message.pagination) : undefined);
+    return obj;
+  },
+
+  fromPartial<I extends Exact<DeepPartial<QueryAllNewUserResponse>, I>>(object: I): QueryAllNewUserResponse {
+    const message = createBaseQueryAllNewUserResponse();
+    message.newUser = object.newUser?.map((e) => NewUser.fromPartial(e)) || [];
+    message.pagination = (object.pagination !== undefined && object.pagination !== null)
+      ? PageResponse.fromPartial(object.pagination)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseQueryEntityAttributesRequest(): QueryEntityAttributesRequest {
+  return { entityId: "" };
+}
+
+export const QueryEntityAttributesRequest = {
+  encode(message: QueryEntityAttributesRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.entityId !== "") {
+      writer.uint32(10).string(message.entityId);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): QueryEntityAttributesRequest {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseQueryEntityAttributesRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.entityId = reader.string();
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): QueryEntityAttributesRequest {
+    return { entityId: isSet(object.entityId) ? String(object.entityId) : "" };
+  },
+
+  toJSON(message: QueryEntityAttributesRequest): unknown {
+    const obj: any = {};
+    message.entityId !== undefined && (obj.entityId = message.entityId);
+    return obj;
+  },
+
+  fromPartial<I extends Exact<DeepPartial<QueryEntityAttributesRequest>, I>>(object: I): QueryEntityAttributesRequest {
+    const message = createBaseQueryEntityAttributesRequest();
+    message.entityId = object.entityId ?? "";
+    return message;
+  },
+};
+
+function createBaseQueryEntityAttributesResponse(): QueryEntityAttributesResponse {
+  return { attributes: [] };
+}
+
+export const QueryEntityAttributesResponse = {
+  encode(message: QueryEntityAttributesResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    for (const v of message.attributes) {
+      Attribute.encode(v!, writer.uint32(10).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): QueryEntityAttributesResponse {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseQueryEntityAttributesResponse();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.attributes.push(Attribute.decode(reader, reader.uint32()));
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): QueryEntityAttributesResponse {
+    return {
+      attributes: Array.isArray(object?.attributes) ? object.attributes.map((e: any) => Attribute.fromJSON(e)) : [],
+    };
+  },
+
+  toJSON(message: QueryEntityAttributesResponse): unknown {
+    const obj: any = {};
+    if (message.attributes) {
+      obj.attributes = message.attributes.map((e) => e ? Attribute.toJSON(e) : undefined);
+    } else {
+      obj.attributes = [];
+    }
+    return obj;
+  },
+
+  fromPartial<I extends Exact<DeepPartial<QueryEntityAttributesResponse>, I>>(
+    object: I,
+  ): QueryEntityAttributesResponse {
+    const message = createBaseQueryEntityAttributesResponse();
+    message.attributes = object.attributes?.map((e) => Attribute.fromPartial(e)) || [];
+    return message;
+  },
+};
+
 /** Query defines the gRPC querier service. */
 export interface Query {
   /** Parameters queries the parameters of the module. */
@@ -1530,6 +1911,12 @@ export interface Query {
   MerchantNew(request: QueryGetMerchantNewRequest): Promise<QueryGetMerchantNewResponse>;
   /** Queries a list of MerchantNew items. */
   MerchantNewAll(request: QueryAllMerchantNewRequest): Promise<QueryAllMerchantNewResponse>;
+  /** Queries a NewUser by index. */
+  NewUser(request: QueryGetNewUserRequest): Promise<QueryGetNewUserResponse>;
+  /** Queries a list of NewUser items. */
+  NewUserAll(request: QueryAllNewUserRequest): Promise<QueryAllNewUserResponse>;
+  /** Queries a list of EntityAttributes items. */
+  EntityAttributes(request: QueryEntityAttributesRequest): Promise<QueryEntityAttributesResponse>;
 }
 
 export class QueryClientImpl implements Query {
@@ -1549,6 +1936,9 @@ export class QueryClientImpl implements Query {
     this.ValueAll = this.ValueAll.bind(this);
     this.MerchantNew = this.MerchantNew.bind(this);
     this.MerchantNewAll = this.MerchantNewAll.bind(this);
+    this.NewUser = this.NewUser.bind(this);
+    this.NewUserAll = this.NewUserAll.bind(this);
+    this.EntityAttributes = this.EntityAttributes.bind(this);
   }
   Params(request: QueryParamsRequest): Promise<QueryParamsResponse> {
     const data = QueryParamsRequest.encode(request).finish();
@@ -1626,6 +2016,24 @@ export class QueryClientImpl implements Query {
     const data = QueryAllMerchantNewRequest.encode(request).finish();
     const promise = this.rpc.request("belshare.eav.Query", "MerchantNewAll", data);
     return promise.then((data) => QueryAllMerchantNewResponse.decode(new _m0.Reader(data)));
+  }
+
+  NewUser(request: QueryGetNewUserRequest): Promise<QueryGetNewUserResponse> {
+    const data = QueryGetNewUserRequest.encode(request).finish();
+    const promise = this.rpc.request("belshare.eav.Query", "NewUser", data);
+    return promise.then((data) => QueryGetNewUserResponse.decode(new _m0.Reader(data)));
+  }
+
+  NewUserAll(request: QueryAllNewUserRequest): Promise<QueryAllNewUserResponse> {
+    const data = QueryAllNewUserRequest.encode(request).finish();
+    const promise = this.rpc.request("belshare.eav.Query", "NewUserAll", data);
+    return promise.then((data) => QueryAllNewUserResponse.decode(new _m0.Reader(data)));
+  }
+
+  EntityAttributes(request: QueryEntityAttributesRequest): Promise<QueryEntityAttributesResponse> {
+    const data = QueryEntityAttributesRequest.encode(request).finish();
+    const promise = this.rpc.request("belshare.eav.Query", "EntityAttributes", data);
+    return promise.then((data) => QueryEntityAttributesResponse.decode(new _m0.Reader(data)));
   }
 }
 

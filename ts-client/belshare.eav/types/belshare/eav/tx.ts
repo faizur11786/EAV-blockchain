@@ -61,6 +61,16 @@ export interface MsgNewMerchantResponse {
   guid: string;
 }
 
+export interface MsgCreateNewUser {
+  creator: string;
+  address: string;
+  attributes: Attribute[];
+}
+
+export interface MsgCreateNewUserResponse {
+  guid: string;
+}
+
 function createBaseMsgCreateUser(): MsgCreateUser {
   return { creator: "", address: "" };
 }
@@ -728,6 +738,124 @@ export const MsgNewMerchantResponse = {
   },
 };
 
+function createBaseMsgCreateNewUser(): MsgCreateNewUser {
+  return { creator: "", address: "", attributes: [] };
+}
+
+export const MsgCreateNewUser = {
+  encode(message: MsgCreateNewUser, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.creator !== "") {
+      writer.uint32(10).string(message.creator);
+    }
+    if (message.address !== "") {
+      writer.uint32(18).string(message.address);
+    }
+    for (const v of message.attributes) {
+      Attribute.encode(v!, writer.uint32(26).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): MsgCreateNewUser {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseMsgCreateNewUser();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.creator = reader.string();
+          break;
+        case 2:
+          message.address = reader.string();
+          break;
+        case 3:
+          message.attributes.push(Attribute.decode(reader, reader.uint32()));
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): MsgCreateNewUser {
+    return {
+      creator: isSet(object.creator) ? String(object.creator) : "",
+      address: isSet(object.address) ? String(object.address) : "",
+      attributes: Array.isArray(object?.attributes) ? object.attributes.map((e: any) => Attribute.fromJSON(e)) : [],
+    };
+  },
+
+  toJSON(message: MsgCreateNewUser): unknown {
+    const obj: any = {};
+    message.creator !== undefined && (obj.creator = message.creator);
+    message.address !== undefined && (obj.address = message.address);
+    if (message.attributes) {
+      obj.attributes = message.attributes.map((e) => e ? Attribute.toJSON(e) : undefined);
+    } else {
+      obj.attributes = [];
+    }
+    return obj;
+  },
+
+  fromPartial<I extends Exact<DeepPartial<MsgCreateNewUser>, I>>(object: I): MsgCreateNewUser {
+    const message = createBaseMsgCreateNewUser();
+    message.creator = object.creator ?? "";
+    message.address = object.address ?? "";
+    message.attributes = object.attributes?.map((e) => Attribute.fromPartial(e)) || [];
+    return message;
+  },
+};
+
+function createBaseMsgCreateNewUserResponse(): MsgCreateNewUserResponse {
+  return { guid: "" };
+}
+
+export const MsgCreateNewUserResponse = {
+  encode(message: MsgCreateNewUserResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.guid !== "") {
+      writer.uint32(10).string(message.guid);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): MsgCreateNewUserResponse {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseMsgCreateNewUserResponse();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.guid = reader.string();
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): MsgCreateNewUserResponse {
+    return { guid: isSet(object.guid) ? String(object.guid) : "" };
+  },
+
+  toJSON(message: MsgCreateNewUserResponse): unknown {
+    const obj: any = {};
+    message.guid !== undefined && (obj.guid = message.guid);
+    return obj;
+  },
+
+  fromPartial<I extends Exact<DeepPartial<MsgCreateNewUserResponse>, I>>(object: I): MsgCreateNewUserResponse {
+    const message = createBaseMsgCreateNewUserResponse();
+    message.guid = object.guid ?? "";
+    return message;
+  },
+};
+
 /** Msg defines the Msg service. */
 export interface Msg {
   CreateUser(request: MsgCreateUser): Promise<MsgCreateUserResponse>;
@@ -735,8 +863,9 @@ export interface Msg {
   CraeteAtteibute(request: MsgCraeteAtteibute): Promise<MsgCraeteAtteibuteResponse>;
   CraeteValue(request: MsgCraeteValue): Promise<MsgCraeteValueResponse>;
   CreateShop(request: MsgCreateShop): Promise<MsgCreateShopResponse>;
-  /** this line is used by starport scaffolding # proto/tx/rpc */
   NewMerchant(request: MsgNewMerchant): Promise<MsgNewMerchantResponse>;
+  /** this line is used by starport scaffolding # proto/tx/rpc */
+  CreateNewUser(request: MsgCreateNewUser): Promise<MsgCreateNewUserResponse>;
 }
 
 export class MsgClientImpl implements Msg {
@@ -749,6 +878,7 @@ export class MsgClientImpl implements Msg {
     this.CraeteValue = this.CraeteValue.bind(this);
     this.CreateShop = this.CreateShop.bind(this);
     this.NewMerchant = this.NewMerchant.bind(this);
+    this.CreateNewUser = this.CreateNewUser.bind(this);
   }
   CreateUser(request: MsgCreateUser): Promise<MsgCreateUserResponse> {
     const data = MsgCreateUser.encode(request).finish();
@@ -784,6 +914,12 @@ export class MsgClientImpl implements Msg {
     const data = MsgNewMerchant.encode(request).finish();
     const promise = this.rpc.request("belshare.eav.Msg", "NewMerchant", data);
     return promise.then((data) => MsgNewMerchantResponse.decode(new _m0.Reader(data)));
+  }
+
+  CreateNewUser(request: MsgCreateNewUser): Promise<MsgCreateNewUserResponse> {
+    const data = MsgCreateNewUser.encode(request).finish();
+    const promise = this.rpc.request("belshare.eav.Msg", "CreateNewUser", data);
+    return promise.then((data) => MsgCreateNewUserResponse.decode(new _m0.Reader(data)));
   }
 }
 

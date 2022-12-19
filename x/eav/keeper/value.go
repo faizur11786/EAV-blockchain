@@ -67,3 +67,6 @@ func (k Keeper) GetAllValue(ctx sdk.Context) (list []types.Value) {
 
 	return
 }
+
+
+// func (k Keeper) GetValues

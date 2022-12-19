@@ -45,12 +45,23 @@ export interface EavMsgCreateEntityTypeResponse {
   id?: string;
 }
 
+export interface EavMsgCreateNewUserResponse {
+  guid?: string;
+}
+
 export type EavMsgCreateShopResponse = object;
 
 export type EavMsgCreateUserResponse = object;
 
 export interface EavMsgNewMerchantResponse {
   guid?: string;
+}
+
+export interface EavNewUser {
+  address?: string;
+  guid?: string;
+  creator?: string;
+  createdAt?: string;
 }
 
 /**
@@ -118,6 +129,21 @@ export interface EavQueryAllMerchantResponse {
   pagination?: V1Beta1PageResponse;
 }
 
+export interface EavQueryAllNewUserResponse {
+  newUser?: EavNewUser[];
+
+  /**
+   * PageResponse is to be embedded in gRPC response messages where the
+   * corresponding request message has used PageRequest.
+   *
+   *  message SomeResponse {
+   *          repeated Bar results = 1;
+   *          PageResponse page = 2;
+   *  }
+   */
+  pagination?: V1Beta1PageResponse;
+}
+
 export interface EavQueryAllUserResponse {
   user?: EavUser[];
 
@@ -148,6 +174,10 @@ export interface EavQueryAllValueResponse {
   pagination?: V1Beta1PageResponse;
 }
 
+export interface EavQueryEntityAttributesResponse {
+  attributes?: EavAttribute[];
+}
+
 export interface EavQueryGetAttributeResponse {
   attribute?: EavAttribute;
 }
@@ -158,10 +188,16 @@ export interface EavQueryGetEntityTypeResponse {
 
 export interface EavQueryGetMerchantNewResponse {
   merchantNew?: EavMerchantNew;
+  attributes?: EavAttribute[];
+  values?: EavValue[];
 }
 
 export interface EavQueryGetMerchantResponse {
   merchant?: EavMerchant;
+}
+
+export interface EavQueryGetNewUserResponse {
+  newUser?: EavNewUser;
 }
 
 export interface EavQueryGetUserResponse {
@@ -449,6 +485,22 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
    * No description
    *
    * @tags Query
+   * @name QueryEntityAttributes
+   * @summary Queries a list of EntityAttributes items.
+   * @request GET:/belShare/eav/entity_attributes/{entityId}
+   */
+  queryEntityAttributes = (entityId: string, params: RequestParams = {}) =>
+    this.request<EavQueryEntityAttributesResponse, RpcStatus>({
+      path: `/belShare/eav/entity_attributes/${entityId}`,
+      method: "GET",
+      format: "json",
+      ...params,
+    });
+
+  /**
+   * No description
+   *
+   * @tags Query
    * @name QueryEntityTypeAll
    * @summary Queries a list of EntityType items.
    * @request GET:/belShare/eav/entity_type
@@ -561,11 +613,53 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
    * @tags Query
    * @name QueryMerchantNew
    * @summary Queries a MerchantNew by index.
-   * @request GET:/belShare/eav/merchant_new/{address}
+   * @request GET:/belShare/eav/merchant_new/{address}/{entityId}
    */
-  queryMerchantNew = (address: string, params: RequestParams = {}) =>
+  queryMerchantNew = (address: string, entityId: string, params: RequestParams = {}) =>
     this.request<EavQueryGetMerchantNewResponse, RpcStatus>({
-      path: `/belShare/eav/merchant_new/${address}`,
+      path: `/belShare/eav/merchant_new/${address}/${entityId}`,
+      method: "GET",
+      format: "json",
+      ...params,
+    });
+
+  /**
+   * No description
+   *
+   * @tags Query
+   * @name QueryNewUserAll
+   * @summary Queries a list of NewUser items.
+   * @request GET:/belShare/eav/new_user
+   */
+  queryNewUserAll = (
+    query?: {
+      "pagination.key"?: string;
+      "pagination.offset"?: string;
+      "pagination.limit"?: string;
+      "pagination.count_total"?: boolean;
+      "pagination.reverse"?: boolean;
+    },
+    params: RequestParams = {},
+  ) =>
+    this.request<EavQueryAllNewUserResponse, RpcStatus>({
+      path: `/belShare/eav/new_user`,
+      method: "GET",
+      query: query,
+      format: "json",
+      ...params,
+    });
+
+  /**
+   * No description
+   *
+   * @tags Query
+   * @name QueryNewUser
+   * @summary Queries a NewUser by index.
+   * @request GET:/belShare/eav/new_user/{address}
+   */
+  queryNewUser = (address: string, params: RequestParams = {}) =>
+    this.request<EavQueryGetNewUserResponse, RpcStatus>({
+      path: `/belShare/eav/new_user/${address}`,
       method: "GET",
       format: "json",
       ...params,

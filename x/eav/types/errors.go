@@ -9,6 +9,6 @@ import (
 // x/eav module sentinel errors
 var (
 	ErrSample      = sdkerrors.Register(ModuleName, 1100, "sample error")
-	ErrDuplicate = sdkerrors.Register(ModuleName, 1300, "")
+	ErrDuplicate   = sdkerrors.Register(ModuleName, 1300, "")
 	ErrDuplicateID = sdkerrors.Register(ModuleName, 1400, "")
 )

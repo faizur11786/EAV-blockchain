@@ -9,6 +9,7 @@ import "belshare/eav/entity_type.proto";
 import "belshare/eav/attribute.proto";
 import "belshare/eav/value.proto";
 import "belshare/eav/merchant_new.proto";
+import "belshare/eav/new_user.proto";
 // this line is used by starport scaffolding # genesis/proto/import
 
 option go_package = "belShare/x/eav/types";
@@ -22,5 +23,6 @@ message GenesisState {
   repeated Attribute attributeList = 5 [(gogoproto.nullable) = false];
   repeated Value valueList = 6 [(gogoproto.nullable) = false];
   repeated MerchantNew merchantNewList = 7 [(gogoproto.nullable) = false];
+  repeated NewUser newUserList = 8 [(gogoproto.nullable) = false];
   // this line is used by starport scaffolding # genesis/proto/state
 }

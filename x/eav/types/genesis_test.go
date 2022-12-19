@@ -75,6 +75,14 @@ func TestGenesisState_Validate(t *testing.T) {
 						Address: "1",
 					},
 				},
+				NewUserList: []types.NewUser{
+					{
+						Guid: "0",
+					},
+					{
+						Guid: "1",
+					},
+				},
 				// this line is used by starport scaffolding # types/genesis/validField
 			},
 			valid: true,
@@ -162,6 +170,20 @@ func TestGenesisState_Validate(t *testing.T) {
 					},
 					{
 						Address: "0",
+					},
+				},
+			},
+			valid: false,
+		},
+		{
+			desc: "duplicated newUser",
+			genState: &types.GenesisState{
+				NewUserList: []types.NewUser{
+					{
+						Guid: "0",
+					},
+					{
+						Guid: "0",
 					},
 				},
 			},

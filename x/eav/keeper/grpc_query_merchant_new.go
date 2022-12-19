@@ -4,6 +4,7 @@ import (
 	"context"
 
 	"belShare/x/eav/types"
+
 	"github.com/cosmos/cosmos-sdk/store/prefix"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/query"
@@ -45,13 +46,30 @@ func (k Keeper) MerchantNew(c context.Context, req *types.QueryGetMerchantNewReq
 	}
 	ctx := sdk.UnwrapSDKContext(c)
 
+	_, found := k.GetEntityType(ctx, req.EntityId)
+	if !found {
+		return nil, status.Error(codes.NotFound, "Entity not found",)
+	}
+	
 	val, found := k.GetMerchantNew(
 		ctx,
 		req.Address,
 	)
+	
 	if !found {
 		return nil, status.Error(codes.NotFound, "not found")
 	}
+	
+	attributes := k.GetAttributesByEntity(ctx, req.EntityId)
 
-	return &types.QueryGetMerchantNewResponse{MerchantNew: val}, nil
+
+	var values []types.Value
+
+	for _, attribute := range attributes{
+		value, _ := k.GetValue(ctx, val.Guid, attribute.Guid)
+		values = append(values, value)
+	}
+
+
+	return &types.QueryGetMerchantNewResponse{MerchantNew: val, Attributes: attributes, Values: values}, nil
 }
